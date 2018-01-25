@@ -33,10 +33,12 @@ hexasc:
   	hexnumbers:				# if below or equal to 9
   		addi $v0,$t0,0x30	# $t0 | 0x00 00 00 30 -> add 0x30 to what's input -> we get "ascii"
   		jr $ra				# numbers 0 through 9 (0 through 9 decimal)
+      nop
   	
  	hexletters:				# if above 9 but below or equal to 15
  		addi $v0,$t0,0x37	# $t0 | 0x00 00 00 37 -> add 0x37 to what's input -> we get "ascii"
  		jr $ra				# letters accepted are A through F (10 through 15 decimal)
+    nop
 
  							# if input is 17 we will throw away the 2nd nibble of 17:
  							# ..00 0001 0001 & ..00 0000 1111 leaving only the lower 0001 intact

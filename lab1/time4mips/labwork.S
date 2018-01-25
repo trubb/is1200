@@ -5,6 +5,8 @@
   # Please add your own code at the end of the file.
   # Modified 2018-01-24 by E. Pettersson and S. Andersson
 
+.global delay
+.global time2string
   #
   # Please keep the two macros PUSH and POP unchanged
   #
@@ -41,7 +43,7 @@ hexasc:
     jr $ra      # letters accepted are A through F (10 through 15 decimal)
     nop
 
-  # if input is 17 we will throw away the 2nd nibble of 17:
+  # fi input is 17 we will throw away the 2nd nibble of 17:
   # ..00 0001 0001 & ..00 0000 1111 leaving only the lower 0001 intact
   # this is lower than or equal to 9, so addi 0001, 0x30 outputs 0x31
   # which is ASCII for 1.
@@ -57,7 +59,7 @@ hexasc:
 #
 delay:
 # less bad delay
-  PUSH ($ra)
+  PUSH $ra
 
   li $t6, 4711  # constant
   move $t5, $a0 # called with argument $a0, move that to $t5 so we dare do stuff with it
@@ -69,7 +71,7 @@ delay:
     sub $t5, $t5, 1 #ms -= 1  # for each iteration remove 1 from argument
 
   for_loop:
-    beq, $t4, $t6, while_loop # if i <= argument break to while_loop
+    bge $t4, $t6, while_loop # if i >= argument break to while_loop
     nop
     addi $t4, $t4, 1  # i++
     j for_loop    # jump back to the top of the loop
@@ -79,7 +81,7 @@ delay:
   nop
 
   exit_delay:
-    POP ($ra)
+    POP $ra
     jr $ra
     nop
 
@@ -103,12 +105,12 @@ delay:
   # $a0 contains the address where we can store our output
   # $a1 contains time info, lower 16 bits are of interest (0x0000 ffff)
 time2string:
-  PUSH ($s1)        # save $s1 in case someone else used it before
-  PUSH ($ra)        # save return adress on stack
+  PUSH $s1        # save $s1 in case someone else used it before
+  PUSH $ra        # save return adress on stack
 
   # copy $a0 to $s1 so we can work with it without trouble
   move  $s1, $a0
-  PUSH ($a0)        # push $a0 so that we're not doing anything stupid with it
+  PUSH $a0        # push $a0 so that we're not doing anything stupid with it
 
   # first number
   andi  $t1, $a1, 0xf000  # extract top nibble, shift different amount for each 4
@@ -150,9 +152,9 @@ time2string:
   li    $t1, 0x00       # insert NUL into output memory thing
   sb    $t1, 5($s1)
 
-  POP ($a0)         # pop out what we pushed so as to not blow anything up
-  POP ($ra)
-  POP ($s1)
+  POP $a0         # pop out what we pushed so as to not blow anything up
+  POP $ra
+  POP $s1
 
   jr    $ra         # jump out since we are done
   nop             # because we are scared of the branch delay slot

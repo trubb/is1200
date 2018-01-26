@@ -5,6 +5,7 @@
   # Please add your own code at the end of the file.
   # Modified 2018-01-24 by E. Pettersson and S. Andersson
 
+.global hexasc
 .global delay
 .global time2string
   #

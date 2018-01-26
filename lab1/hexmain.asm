@@ -27,8 +27,8 @@ hexasc:
   
  	ble $t0,9,hexnumbers 	# branch if content of $t0 <= 9, else continue
  	nop
- 	ble $t0,31,hexletters	# branch if conten of $t0 <= 15, else continue
- 	nop						# check if this is needed, might be better to jr $ra
+ 	ble $t0,31,hexletters	# branch if content of $t0 <= 15, else continue
+ 	nop
   
   	hexnumbers:				# if below or equal to 9
   		addi $v0,$t0,0x30	# $t0 | 0x00 00 00 30 -> add 0x30 to what's input -> we get "ascii"

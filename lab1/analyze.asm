@@ -12,7 +12,7 @@ loop:
 	li	$v0,11			# syscall with v0 = 11 will print out
 	syscall				# one byte from a0 to the Run I/O window
 
-	addi	$s0,$s0,3	# what happens if the constant is changed?
+	addi	$s0,$s0,3	# what happens if the constant is changed? >original value 1<
 						# if constant is changed we will jump in different increments, to print the requested string 1 -> 3
 						# we print the next character when syscall ($v0 == 11) happens
 	

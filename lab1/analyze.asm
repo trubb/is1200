@@ -16,7 +16,7 @@ loop:
 						# if constant is changed we will jump in different increments, to print the requested string 1 -> 3
 						# we print the next character when syscall ($v0 == 11) happens
 	
-	li	$t0,0x5b		# load 0x0000005b into $t0, 0x5b == ascii char '[', we dont want to print this so:
+	li	$t0,0x5d		# load 0x0000005b into $t0, 0x5b == ascii char '[', we dont want to print this so:
 	bne	$s0,$t0,loop	# if $s0 != $t0, jump to loop (top of function), if $s0 contains 0x5b after all the addi's above we
 						# get a FALSE condition and will continue to execute code below: the "stop" loop
 	nop					# delay slot filler (just in case)

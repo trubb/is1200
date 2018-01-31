@@ -114,7 +114,7 @@ delay:
 # less bad delay
 	PUSH ($ra)
 
-	li $t6, 4711	# constant
+	li $t6, 180000	# constant
 	move $t5, $a0	# called with argument $a0, move that to $t5 so we dare do stuff with it
 	li $t4, 0	# i
 

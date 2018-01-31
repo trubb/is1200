@@ -62,7 +62,7 @@ delay:
 # less bad delay
   PUSH $ra
 
-  li $t6, 4711  # constant
+  li $t6, 3660000  # constant
   move $t5, $a0 # called with argument $a0, move that to $t5 so we dare do stuff with it
   li $t4, 0 # i
 
@@ -181,7 +181,7 @@ printnine:              #prints xx:xNINE if last nibble == 9
   sb $t2, 6($s1)    # store resulting N in right place
 
   #E
-  li $t2, 0x45      # put ASCII N in $t2
+  li $t2, 0x45      # put ASCII E in $t2
   sb $t2, 7($s1)    # store resulting N in right place
 
   # NUL

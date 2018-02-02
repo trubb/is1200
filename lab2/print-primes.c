@@ -26,6 +26,7 @@ void print_number(int n) {	// void function does things but does not explicitly 
 	count++;			// every time we print, increase count by 1 to be able to..
 
 	if (count % COLUMNS == 0) {	// if value of counter / COLUMNS yields no remainder
+
 		printf("\n");			// force newline and continue printing
 	}
 }
@@ -55,7 +56,9 @@ void print_primes(int n) {
 	// COLUMNS
 
 	for (int i = 2; i <= n; i++) {	// since 0, 1 are not primes, start at 2
+
 		if( is_prime(i) ) {
+
 			print_number(i);
 		}
 	}

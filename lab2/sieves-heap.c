@@ -1,9 +1,18 @@
+/*
+ Modified
+ By Erik Pettersson
+ and Sebastian Andersson
+*/
 
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
 
 #define COLUMNS 6
+
+/*
+ * Erik Pettersson
+*/
 int count = 0;	// initialize counter for number printing to 0
 
 void print_number(int n) {	// void function does things but does not explicitly return something
@@ -17,12 +26,15 @@ void print_number(int n) {	// void function does things but does not explicitly 
 	}
 }
 
+/*
+ * Erik Pettersson AND Sebastian Andersson
+*/
 void print_sieves(int n) {
 	
 	int i, j;
 	char *numbers;
 
-	// allocate space enough to house n chars, house it in numbers
+	// allocate space enough to house n chars, call the place to house them "numbers"
 	numbers = malloc( sizeof( char ) * n );
 
 	// best practice says to warn if we fail to allocate

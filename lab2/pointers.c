@@ -1,7 +1,7 @@
 /*
- Modified 2018-01-31
+ Modified
  By Erik Pettersson
-
+ and Sebastian Andersson
 */
 
 #include <stdio.h>
@@ -9,6 +9,10 @@
 char* text1 = "This is a string.";
 char* text2 = "Yet another thing.";
 
+
+/*
+ * Erik Pettersson
+*/
 int count = 0;	// counter variable
 
 int list1[30];	// a list to contain text1
@@ -33,6 +37,9 @@ void copycodes(char* text_in, int* list_in, int* count){
 	}
 }
 
+/*
+ * Erik Pettersson
+*/
 void work(){
 	//			$a0, $a1, $a2
 	copycodes(text1, list1, &count);	// call for text 1
@@ -59,13 +66,16 @@ void endian_proof(const char* c){
 
 /* in order to make sure that your above thing does the expected thing:
  * for pointers c+x is the same as c[x]
+ * Erik Pettersson
 */
 void endian_proofer(const char* c){
 	printf("\nEndian experiment checker: 0x%02x,0x%02x,0x%02x,0x%02x\n", 
 		(int) c[0],(int) c[1], (int) c[2], (int) c[3]);
 
 }
-
+/*
+ * Erik Pettersson
+*/
 void endian_proofest(const char* c){
 	printf("\nEndian experiment checker: 0x%02x,0x%02x,0x%02x,0x%02x\n", 
 		(int) c[3],(int) c[2], (int) c[1], (int) c[0]);
@@ -92,8 +102,9 @@ int main(void){
 1. text1/text2 är redan pointers, count skickas adressen av:
 copycodes(text1, list1, &count);
 
-2. Pointer ~array, men i minnet. Incrementera en pointer ->
-	kliva ett steg framåt, storlek på steget beror på typ.
+2. Pointer ~array, men i minnet, minnet är "en stor array".
+	Incrementera en pointer -> kliva ett steg framåt
+	storlek på steget beror på type.
 
 3. Increment pointer -> gå vidare i minnet, hittar nåt annat
    Increment avrefererad pointer -> öka det pointern refererar till
@@ -105,10 +116,11 @@ copycodes(text1, list1, &count);
 	but we dereference count so that we can increment it's value.
 
 4. *list_in = *text_in;
-	i utgångsläget utför vi list[0] = text_in[0], nästa varv:
+	i utgångsläget utför vi list_in[0] = text_in[0], nästa varv:
 	list[1] = text_in[1]. osv.
+	tills vi nått slutet på strängen - det vet vi tack vare att *text_in == 0 inträffar då
 
-	store word $t0, 0($a1) gör samma sak som ovan.
+	store word $t0, 0($a1) innebär samma sak som ovan för ett givet varv.
 
 	Dereferencing innebär att vi kommer arbeta med det som pointern pekar på,
 	istället för pekaren ("objektet"/variabeln istället för ~minnesadresser där de finns)

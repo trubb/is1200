@@ -4,16 +4,16 @@
  Last modified: 2015-09-15
  This file is in the public domain.
 
- Modified 2018-01-31
+ Modified
  By Erik Pettersson
+ and Sebastian Andersson
 
 */
-
 
 #include <stdio.h>
 
 /**
- * is_prime changed to current state by erik pettersson 2018-01-317
+ * is_prime changed to current state by sebastian andersson
 **/
 int is_prime(int n){
 
@@ -28,7 +28,7 @@ int is_prime(int n){
 	return 1;	// if a number passes the above checks it should be prime
 				// return 1 to state that it is
 
-/* 
+/* by erik pettersson:
 	// other more explicit solution
 	int i = 5;
 

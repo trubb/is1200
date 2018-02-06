@@ -4,8 +4,9 @@
  Last modified: 2015-09-15
  This file is in the public domain.
  
- Modified 2018-01-31
+ Modified
  By Erik Pettersson
+ and Sebastian Andersson
 
 */
 
@@ -15,6 +16,9 @@
 
 #define COLUMNS 6
 
+/*
+ * Erik Pettersson
+*/
 int count = 0;	// initialize global counter for number printing to 0
 
 void print_number(int n) {	// a void function does things but does not explicitly return something
@@ -30,7 +34,7 @@ void print_number(int n) {	// a void function does things but does not explicitl
 }
 
 /**
- * is_prime changed to current state by erik pettersson 2018-01-31
+ * Sebastian Andersson
 **/
 int is_prime(int n) {
 
@@ -47,6 +51,9 @@ int is_prime(int n) {
 				// return 1 to state that it is
 }
 
+/*
+ * Erik Pettersson
+*/
 void print_primes(int n) {
 	// Should print out all prime numbers less than 'n'
 	// with the following formatting. Note that

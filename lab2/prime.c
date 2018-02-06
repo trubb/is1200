@@ -21,11 +21,12 @@ int is_prime(int n){
 	for (int i = 2; i <= (n/2); i++) {	// i <= n/2 because we cant reasonably divide a number by
 										// more than it's half and expect a whole number in return
 		if (n % i == 0) {	// if n mod i doesnt yield a remainder, we have a nonprime number
-			return 0;
+			return 0;		// return 0 to state that it's not a prime.
 		}
 	}
 
 	return 1;	// if a number passes the above checks it should be prime
+				// return 1 to state that it is
 
 /* 
 	// other more explicit solution

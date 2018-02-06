@@ -9,9 +9,6 @@
 #include <stdlib.h>
 
 #define COLUMNS 6
-//////////////////////////////////////////
-//		Initialize global variables		//
-//////////////////////////////////////////
 int count = 0;	// initialize counter for number printing to 0
 
 void print_number(int n) {	// void function does things but does not explicitly return something
@@ -30,17 +27,22 @@ void print_sieves(int n) {
 	int i, j;
 	char numbers[n];
 
+	/* init */
 	for (i = 0; i < n; i++) {	// set all indexes in numbers[] to 1, denoting true
 								// meaning the index i is a prime number
-		numbers[i] = 1;
+		numbers[i] = 1;			// this is the start state, will be modified below
 	}
 
+	/* for */
 	for (i = 2; i < (int) sqrt(n); i++) {	// do for every i >= 2 below the root of n
 
+	/* if */
 		if (numbers[i]) {	// if numbers[i] != 0 then do
 
+	/* for */
 			for (j = i*i; j < n; j += i) {	// for all j = i^2, i^2+i, i^2+2i, i^2+3i, below n
 
+	/* set */
 				numbers[j] = 0;	// set numbers[j] to false (zero)
 								// meaning the index j is not a prime number
 			}
@@ -48,9 +50,9 @@ void print_sieves(int n) {
 	}
 
 	// print the numbers
-	for (i = 2; i <= n; i++){
+	for (i = 2; i < n; i++){
 
-		if (numbers[i]) {	// if a given i is set to true in nubmers, print it
+		if (numbers[i] != 0) {	// if a given i is set to true in numbers, print it
 
 			print_number(i);
 		}

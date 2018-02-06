@@ -14,23 +14,20 @@
 #include <stdlib.h>
 
 #define COLUMNS 6
-//////////////////////////////////////////
-//		Initialize global variables		//
-//////////////////////////////////////////
-int count = 0;	// initialize counter for number printing to 0
 
-void print_number(int n) {	// void function does things but does not explicitly return something
+int count = 0;	// initialize global counter for number printing to 0
 
-	printf("%10d",n);	// print the number, 10 as it's what done below, space for characters?
+void print_number(int n) {	// a void function does things but does not explicitly return something
+
+	printf("%10d",n);	// print the number, 10 as character space (term?) as it's what done below
 	
 	count++;			// every time we print, increase count by 1 to be able to..
 
 	if (count % COLUMNS == 0) {	// if value of counter / COLUMNS yields no remainder
 
-		printf("\n");			// force newline and continue printing
+		printf("\n");			// force newline and continue printing if count is evenly divisible by COLUMNS
 	}
 }
-
 
 /**
  * is_prime changed to current state by erik pettersson 2018-01-31
@@ -38,15 +35,16 @@ void print_number(int n) {	// void function does things but does not explicitly 
 int is_prime(int n) {
 
 	int i = 0;
-	for (i = 2; i <= ( n/2 ); i++) {	// if we reach a value that is beyond 
-										//the range then n is prime, returns 1
-		if (n % i == 0) {	// if n / anything that isnt 2 or itself yields 0 remainder
-							// then n is not prime, return 0
+	for (i = 2; i <= ( n/2 ); i++) {// i <= n/2 because we cant reasonably divide a number by
+									// more than it's half and expect a whole number in return
+		if (n % i == 0) {	// if n mod i doesnt yield a remainder, we have a nonprime number
+							// return 0 to state that it's not a prime.
 			return 0;
 		}
 	}
 
-	return 1; // if it passes the above check it is prime, 1
+	return 1;	// if a number passes the above checks it should be prime
+				// return 1 to state that it is
 }
 
 void print_primes(int n) {
@@ -57,9 +55,9 @@ void print_primes(int n) {
 
 	for (int i = 2; i <= n; i++) {	// since 0, 1 are not primes, start at 2
 
-		if( is_prime(i) ) {
+		if( is_prime(i) ) {	// if a number is prime we want to print it
 
-			print_number(i);
+			print_number(i); // do so by calling print number with said number
 		}
 	}
 

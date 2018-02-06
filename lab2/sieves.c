@@ -1,3 +1,8 @@
+/*
+ Modified 2018-01-31
+ By Erik Pettersson
+
+*/
 
 #include <stdio.h>
 #include <math.h>

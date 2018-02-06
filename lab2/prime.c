@@ -17,16 +17,18 @@
 **/
 int is_prime(int n){
 
-
-	for (int i = 2; i <= (n/2); i++) { // anything below 2 is not prime
-		if (n % i == 0) {
+	// anything below 2 is not prime, start at 2
+	for (int i = 2; i <= (n/2); i++) {	// i <= n/2 because we cant reasonably divide a number by
+										// more than it's half and expect a whole number in return
+		if (n % i == 0) {	// if n mod i doesnt yield a remainder, we have a nonprime number
 			return 0;
 		}
 	}
 
-	return 1;
+	return 1;	// if a number passes the above checks it should be prime
 
 /* 
+	// other more explicit solution
 	int i = 5;
 
 	if (n <= 1)	{	// 0 and 1 are not primes

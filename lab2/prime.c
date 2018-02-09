@@ -13,7 +13,7 @@
 #include <stdio.h>
 
 /**
- * is_prime changed to current state by sebastian andersson
+ * sebastian andersson
 **/
 int is_prime(int n){
 
@@ -28,7 +28,7 @@ int is_prime(int n){
 	return 1;	// if a number passes the above checks it should be prime
 				// return 1 to state that it is
 
-/* by erik pettersson:
+/* erik pettersson:
 	// other more explicit solution
 	int i = 5;
 

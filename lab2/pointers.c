@@ -9,7 +9,6 @@
 char* text1 = "This is a string.";
 char* text2 = "Yet another thing.";
 
-
 /*
  * Erik Pettersson
 */

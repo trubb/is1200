@@ -1,16 +1,18 @@
-Consider AM18, AM19, and AF1. Explain why gv ends up with the incremented value, but m does not.
+**Consider AM18, AM19, and AF1. Explain why gv ends up with the incremented value, but m does not.
 m inkrementeras inte eftersom fun() arbetar med en lokal variabel param, som gv sätts till efter att param inkrementerats från m till m+1 och sparats.
 
-Pointer cp is a character pointer that points to a sequence of bytes. What is the size of the cp pointer itself?
+**Pointer cp is a character pointer that points to a sequence of bytes. What is the size of the cp pointer itself?
 32 bitar/4 bytes, pointers är oftast lika med word-storleken -> 0x76 54 32 10
 
-Explain how a C string is laid out in memory. Why does the character string that cp points to have to be 9 bytes?
+**Explain how a C string is laid out in memory. Why does the character string that cp points to have to be 9 bytes?
+I minnet sparas den lo -> hi, i data: 
+b o n j o u r ! \0
+0 1 2 3 4 5 6 7 8...
+C-strings behöver en NUL-char i slutet för terminering. Det betyder att vi använder 8+1 bytes för "b o n j o u r ! \0"
 
-C-strings behöver en NUL-char i slutet för terminering. Det betyder att vi använder 8+1 bytes för "bonjour!"
-
-Which addresses have fun and main? Which sections are they located in?
+**Which addresses have fun and main? Which sections are they located in?
 De har adresserna: main: 0x9D0011D8 fun: 0x9D001180 , i sektionen Program Flash.
 
-What kind of memory are they stored in? What is the meaning of the data that these symbols points to?
+**What kind of memory are they stored in? What is the meaning of the data that these symbols points to?
 
 ?????????????????????????????????????????????????

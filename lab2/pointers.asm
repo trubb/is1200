@@ -1,5 +1,5 @@
 
- # pointers.asm
+# pointers.asm
 # By David Broman, 2015-09-14
 # This file is in the public domain
 

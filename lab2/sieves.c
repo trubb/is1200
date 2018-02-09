@@ -32,10 +32,12 @@ void print_number(int n) {	// void function does things but does not explicitly 
 void print_sieves(int n) {
 	
 	int i, j;
-	char numbers[n];
+	char numbers[n+1];
+
+	int previous = 0, count = 0;
 
 	/* init */
-	for (i = 0; i < n; i++) {	// set all indexes in numbers[] to 1, denoting true
+	for (i = 0; i <= n; i++) {	// set all indexes in numbers[] to 1, denoting true
 								// meaning the index i is a prime number
 		numbers[i] = 1;			// this is the start state, will be modified below
 	}
@@ -47,7 +49,7 @@ void print_sieves(int n) {
 		if (numbers[i]) {	// if numbers[i] != 0 then do
 
 	/* for */
-			for (j = i*i; j < n; j += i) {	// for all j = i^2, i^2+i, i^2+2i, i^2+3i, below n
+			for (j = i*i; j <= n; j += i) {	// for all j = i^2, i^2+i, i^2+2i, i^2+3i, below n
 
 	/* set */
 				numbers[j] = 0;	// set numbers[j] to false (zero)
@@ -57,15 +59,21 @@ void print_sieves(int n) {
 	}
 
 	// print the numbers
-	for (i = 2; i < n; i++){
+	for (i = 2; i <= n; i++) {
 
 		if (numbers[i] != 0) {	// if a given i is set to true in numbers, print it
 
 			print_number(i);
+
+			if (i - previous == 4) { // if i - previous yields 4 add 1 to counter
+				count++;
+			}
+
+			previous = i;	// set previous to current i before exting iteration
 		}
 	}
 
-	printf("\n");
+	printf("\n\nThis many occurences of B-A == 4: %d\n\n", count);
 }
 
 // 'argc' contains the number of program arguments, and

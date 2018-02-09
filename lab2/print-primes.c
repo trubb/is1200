@@ -22,7 +22,7 @@
 int count = 0;	// initialize global counter for number printing to 0
 
 void print_number(int n) {	// a void function does things but does not explicitly return something
-
+	
 	printf("%10d",n);	// print the number, 10 as character space (term?) as it's what done below
 	
 	count++;			// every time we print, increase count by 1 to be able to..

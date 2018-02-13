@@ -17,6 +17,7 @@
 #define TMR2PERIOD ((80000000 / 256) / 10) /* 100ms */
 
 int mytime = 0x5957;
+
 int timeoutcount = 0;
 
 char textstring[] = "text, more text, and even more text!";
@@ -42,7 +43,7 @@ void labinit( void ) {
 
 	// initialize timer2
 	T2CONSET = 0x70; //	set 0x70, 0111 000 for 1:256 prescaling (clock rate divider)
-	PR2 = TMR2PERIOD; // set timeperiod as defined above
+	PR2 = TMR2PERIOD; // set timeperiod as #DEFINEd above
 	TMR2 = 0; // clear timer register
 	T2CONSET = 0x8000; // start the timer by setting bit 15 in T2CON "on" (1)
 
@@ -82,15 +83,23 @@ void labwork( void ) {
 
 
 	// Check time-out event flag.
+	// if third bit is set then ohshit things are going down
 	if (IFS(0) & 0x100) {
 
-		// Reset all event flags, do 0x0000000000100 instead?
-		IFS(0) = 0;
+		/*
+		 * Question 1
+		 * Reset all event flags, do 0x0000000000100 instead?
+		 *
+		 * Clear the timer interrupt status flag
+		 * http://ww1.microchip.com/downloads/en/DeviceDoc/61105F.pdf
+		 * page 26
+		*/
+		IFSCLR(0) = 0x100;
 
 		timeoutcount++;	// increase counter
 
-		if (timeoutcount == 10) {
-			delay( 1000 );
+		if (timeoutcount == 10) {	// when #interrupts reaches 10 do:
+			//delay( 1000 ); // shouldnt be here for this right?
 			time2string( textstring, mytime );
 			display_string( 3, textstring );
 			display_update();
@@ -98,8 +107,8 @@ void labwork( void ) {
 			display_image(96, icon);
 
 			// uppgift 1d
-			// avreferera porte-pointern och öka det som finns där med 0x1 (1)
-			(*porte) += 0x1;
+			// avreferera porte-pointern och öka det som finns där med 1
+			(*porte)++;
 			// testa också med ++, borde vara samma resultat som a = a + 0x1
 			// görs efter call till tick because reasons
 		}

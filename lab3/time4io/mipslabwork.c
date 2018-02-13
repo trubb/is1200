@@ -78,8 +78,8 @@ void labwork( void ) {
 	tick( &mytime );
 
 	// uppgift 1d
-	// avreferera porte-pointern och öka det som finns där med 0x1 (1)
-	(*porte) += 0x1;
+	// avreferera porte-pointern och öka det som finns där med 1
+	(*porte)++;
 	// testa också med ++, borde vara samma resultat som a = a + 0x1
 	// görs efter call till tick because reasons
 

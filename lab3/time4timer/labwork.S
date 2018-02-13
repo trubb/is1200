@@ -8,6 +8,8 @@
 .global hexasc
 .global delay
 .global time2string
+.global enable_interrupt
+
   #
   # Please keep the two macros PUSH and POP unchanged
   #
@@ -194,3 +196,8 @@ printnine:              #prints xx:xNINE if last nibble == 9
 
   jr    $ra         # jump out since we are done
   nop             # because we are scared of the branch delay slot
+
+enable_interrupt:
+  ei            # literally execute ei instruction
+  jr $ra        # return to caller
+  nop           # branch delay slots are scary

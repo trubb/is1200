@@ -11,14 +11,14 @@
   #
   # Please keep the two macros PUSH and POP unchanged
   #
-.macro	PUSH reg
-	addi	$sp,$sp,-4
-	sw	\reg,0($sp)
+.macro  PUSH reg
+  addi  $sp,$sp,-4
+  sw  \reg,0($sp)
 .endm
 
-.macro	POP reg
-	lw	\reg,0($sp)
-	addi	$sp,$sp,4
+.macro  POP reg
+  lw  \reg,0($sp)
+  addi  $sp,$sp,4
 .endm
   #
   # Please add your own code below this line
@@ -145,9 +145,9 @@ time2string:
   andi  $t1, $a1, 0x000f  # extract top nibble, shift different amount for each 4
 
   # jump to print NINE if last bit is 9
-  li $t7, 9
-  beq   $t1, $t7, printnine
-  nop
+#  li $t7, 9
+#  beq   $t1, $t7, printnine
+#  nop
 
   move  $a0, $t1      # since we dont need to SRL, move $t1 into $s1
   jal   hexasc
@@ -166,31 +166,31 @@ time2string:
   jr    $ra         # jump out since we are done
   nop             # because we are scared of the branch delay slot
 
-printnine:              #prints xx:xNINE if last nibble == 9
+#printnine:              #prints xx:xNINE if last nibble == 9
   
   #N
-  li $t2, 0x4e      # put ASCII N in $t2
-  sb $t2, 4($s1)    # store resulting N in right place
+#  li $t2, 0x4e      # put ASCII N in $t2
+#  sb $t2, 4($s1)    # store resulting N in right place
 
   #I
-  li $t2, 0x49      # put ASCII I in $t2
-  sb $t2, 5($s1)    # store resulting N in right place
+#  li $t2, 0x49      # put ASCII I in $t2
+#  sb $t2, 5($s1)    # store resulting N in right place
 
   #N
-  li $t2, 0x4e      # put ASCII N in $t2
-  sb $t2, 6($s1)    # store resulting N in right place
+#  li $t2, 0x4e      # put ASCII N in $t2
+#  sb $t2, 6($s1)    # store resulting N in right place
 
   #E
-  li $t2, 0x45      # put ASCII E in $t2
-  sb $t2, 7($s1)    # store resulting N in right place
+#  li $t2, 0x45      # put ASCII E in $t2
+#  sb $t2, 7($s1)    # store resulting N in right place
 
   # NUL
-  li    $t1, 0x00       # insert NUL into output memory thing
-  sb    $t1, 8($s1)
+#  li    $t1, 0x00       # insert NUL into output memory thing
+#  sb    $t1, 8($s1)
 
-  POP $a0         # pop out what we pushed so as to not blow anything up
-  POP $ra
-  POP $s1
+#  POP $a0         # pop out what we pushed so as to not blow anything up
+#  POP $ra
+#  POP $s1
 
-  jr    $ra         # jump out since we are done
-  nop             # because we are scared of the branch delay slot
+#  jr    $ra         # jump out since we are done
+#  nop             # because we are scared of the branch delay slot

@@ -8,6 +8,7 @@
 .global hexasc
 .global delay
 .global time2string
+.global enable_interrupt
   #
   # Please keep the two macros PUSH and POP unchanged
   #
@@ -100,6 +101,10 @@ delay:
 # jr $ra
 # nop
 
+enable_interrupt:
+  ei
+  jr  $ra
+  nop
 
   # NBCD handler
   #

@@ -74,7 +74,7 @@ void labinit( void ) {
 
 	IPCSET(2) = 0X1F;	// enable timer 2 and set interrupt priority to 7 - highest
 
-	IECSET(0) = 0x100000000;	// (256) - interrupt enable reg, sets bit 8 to enable interrupts
+	IECSET(0) = 256;	// interrupt enable reg, sets bit 8 to enable interrupts
 	
 	IECSET(0) = 0x800; // enable external interrupt #2
 

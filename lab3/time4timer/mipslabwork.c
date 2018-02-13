@@ -13,11 +13,9 @@
 #include <stdint.h>	/* Declarations of uint_32 and the like */
 #include <pic32mx.h>	/* Declarations of system-specific addresses etc */
 #include "mipslab.h"	/* Declatations for these labs */
-/*
-#define TMR2PERIOD ((80000000 / 256) / 10) // 100ms
 
-volatile int *E;
-volatile int *porte;
+volatile int *myTRISE;
+volatile int *myPORTE;
 
 int mytime = 0x0000; // changed from 5957 in order to make it easier to see real number of ticks
 
@@ -25,23 +23,21 @@ int timeoutcount = 0;
 
 char textstring[] = "text, more text, and even more text!";
 
-// Interrupt Service Routine
+/* Interrupt Service Routine */
 void user_isr( void ) {
 	return;
 }
 
-// Lab-specific initialization goes here
+/* Lab-specific initialization goes here */
 void labinit( void ) {
 	
 	// Set *E to address of TRISE, volatile pointer
-	E = (volatile int *) 0xbf886100;
+	myTRISE = (volatile int *) 0xbf886100;
+	*myPORTE = 0x0; // set whatever porte points at to 0
 	
-	porte = (volatile int *) 0xbf886110;
-
-	*porte = 0x0; // set whatever porte points at to 0
-
+	myPORTE = (volatile int *) 0xbf886110;
 	// Set the 8 least significant bits to zero to set them to be output pins
-	*E = *E & 0xff00;
+	*myTRISE = *myTRISE & 0xff00;
 
 	// Initialize port D, set bits 11-5 as inputs.
 	// om 0-indexerat (vilket det borde vara) så 0xfe0 rätt
@@ -52,13 +48,13 @@ void labinit( void ) {
 	T2CON = 0x0; // stop clock until init done by setting 1st bit to 0
 	T2CONSET = 0x70; //	set 0x70, 0111 000 for 1:256 prescaling (clock rate divider)
 	TMR2 = 0; // clear timer register
-	PR2 = TMR2PERIOD; // set timeperiod as #DEFINEd above ((80000000 / 256) / 10))
+	PR2 = (80000000 / 256) / 10; // set timeperiod for 100ms
 	T2CONSET = 0x8000; // start the timer by setting bit 15 in T2CON "on" (1)
 
 	return;
 }
 
-// This function is called repetitively from the main program
+/* This function is called repetitively from the main program */
 void labwork( void ) {
 
 	int switches = getsw();
@@ -85,20 +81,19 @@ void labwork( void ) {
 		mytime = (switches << 12) | mytime;
 	}
 
-
 	// Check time-out event flag.
 	// if third bit is set then ohshit things are going down
 	if (IFS(0) & 0x100) {
 
-		//
+		/*
 		 * Question 2.1
 		 * Reset all event flags, do 0x0000000000100 instead?
 		 *
 		 * Clear the timer interrupt status flag
-		// * http://ww1.microchip.com/downloads/en/DeviceDoc/61105F.pdf
-		 //* page 26
-		/
-		IFSCLR(0) = 0x100;
+		 * http://ww1.microchip.com/downloads/en/DeviceDoc/61105F.pdf
+		 * page 26
+		*/
+		IFSCLR(0) = 0x0100;
 
 		timeoutcount++;	// increase counter
 	}
@@ -109,80 +104,13 @@ void labwork( void ) {
 		display_string( 3, textstring );
 		display_update();
 		tick( &mytime );
+		// uppgift 1d
+		// avreferera porte-pointern och öka det som finns där med 1
+		(*myPORTE)++;
+		// testa också med ++, borde vara samma resultat som a = a + 0x1
+		// görs efter call till tick because reasons
 		display_image(96, icon);
 		timeoutcount = 0;
 
-		// uppgift 1d
-		// avreferera porte-pointern och öka det som finns där med 1
-		(*porte)++;
-		// testa också med ++, borde vara samma resultat som a = a + 0x1
-		// görs efter call till tick because reasons
 	}
-}
-*/
-
-int mytime = 0x5957;
-
-char textstring[] = "text, more text, and even more text!";
-
-volatile int* myTRISE;    // Pointer to initialisation register for LEDs
-volatile int* myPORTE;    // Pointer to LEDs I/O
-
-int timeoutcount = 0;     // Global variable to count 10 timeouts
-
-/* Interrupt Service Routine */
-void user_isr( void )
-{
-  return;
-}
-
-/* Lab-specific initialization goes here */
-void labinit( void )
-{
-  myTRISE = (volatile int*) 0xbf886100; // LEDs initialisation register
-  *myTRISE &= ~0xff;                    // Initialise bits 0-7 as outputs (set to 0)
-  myPORTE = (volatile int*) 0xbf886110; // LEDs I/O
-
-  TRISD |= 0x0fe0;  // Initialise bits 5-11 as inputs (set to 1)
-
-  T2CON = 0x0;                  // Stop clock until initialisation is done (first bit to 0)
-  T2CONSET = 0x70;              // Apply prescale 1:256
-  TMR2 = 0x0;                   // Timer set to 0
-  PR2 = (80000000 / 256) / 10;  // Load period register
-  T2CONSET = 0x8000;            // Start timer
-
-  return;
-}
-
-/* This function is called repetitively from the main program */
-void labwork( void )
-{
-  int btns = getbtns();
-  if (btns) {
-  	int sw = getsw();
-  	if(btns & 0x4){
-      mytime = (mytime & 0x0fff) | (sw << 12);
-    }
-    if(btns & 0x2){
-      mytime = (mytime & 0xf0ff) | (sw << 8);
-    }
-    if(btns & 0x1){
-      mytime = (mytime & 0xff0f) | (sw << 4);
-    }
-  }
-
-  if (IFS(0) & 0x0100) {  // It the timeout flag is 1 (100ms):
-    timeoutcount++;       // Increment timeoutcount
-    IFSCLR(0)=0x100;      // Clear timeout flag (bit 8 to 0)
-  }
-
-  if (timeoutcount == 10) {
-    time2string( textstring, mytime );
-    display_string( 3, textstring );
-    display_update();
-    tick( &mytime );
-    (*myPORTE)++;
-    display_image(96, icon);
-    timeoutcount = 0; // Reset timeoutcount
-  }
 }

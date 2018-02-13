@@ -39,13 +39,12 @@ void user_isr( void ) {
 			display_update();
 			tick( &mytime );
 			timeoutcount = 0;
-
-			// question 3.1
-			// Clear the timer interrupt status flag
-			// http://ww1.microchip.com/downloads/en/DeviceDoc/61105F.pdf
-			// page 26
-			IFSCLR(0) = 0x100;
 		}
+		// question 3.1
+		// Clear the timer interrupt status flag
+		// http://ww1.microchip.com/downloads/en/DeviceDoc/61105F.pdf
+		// page 26
+		IFSCLR(0) = 0x100;
 	}
 }
 
@@ -75,6 +74,7 @@ void labinit( void ) {
 	IPCSET(2) = 0X1F;	// enable timer 2 and set interrupt priority to 7 - highest
 
 	IECSET(0) = 256;	// interrupt enable reg, sets bit 8 to enable interrupts
+						// 256 because 100000000000 didnt play well with the compiler
 	
 	IECSET(0) = 0x800; // enable external interrupt #2
 

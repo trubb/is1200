@@ -16,7 +16,10 @@
 
 #define TMR2PERIOD ((80000000 / 256) / 10) /* 100ms */
 
-int mytime = 0x5957;
+volatile int *E;
+volatile int *porte;
+
+int mytime = 0x0000; // changed from 5957 in order to make it easier to see real number of ticks
 
 int timeoutcount = 0;
 
@@ -31,15 +34,19 @@ void user_isr( void ) {
 void labinit( void ) {
 	
 	// Set *E to address of TRISE, volatile pointer
-	volatile int *E = (volatile int *) 0xbf886100;
+	E = (volatile int *) 0xbf886100;
 	
+	porte = (volatile int *) 0xbf886110;
+
+	*porte = 0x0; // set whatever porte points at to 0
+
 	// Set the 8 least significant bits to zero to set them to be output pins
 	*E = *E & 0xff00;
 
 	// Initialize port D, set bits 11-5 as inputs.
 	// om 0-indexerat (vilket det borde vara) så 0xfe0 rätt
 	// funkar inte det så pröva med 0x07f0.
-	TRISD = TRISD & 0x0fe0;
+	TRISD = TRISD | 0x0fe0; // changed to | from &
 
 	// initialize timer2
 	T2CONSET = 0x70; //	set 0x70, 0111 000 for 1:256 prescaling (clock rate divider)
@@ -53,10 +60,6 @@ void labinit( void ) {
 /* This function is called repetitively from the main program */
 void labwork( void ) {
 
-	volatile int *porte = (volatile int *) 0xbf886110;
-	
-	*porte = 0x0; // set whatever porte points at to 0
-
 	int switches = getsw();
 	int button = getbtns();
 	
@@ -66,17 +69,17 @@ void labwork( void ) {
 	// om button == 1 -> knapp 2(001) tryckt, om button == 2 -> knapp 3(010), osv
 
 	// button 2
-	if(button == 1 /*|| button == 3 || button == 5 || button == 7*/) {
+	if(button == 1 || button == 3 || button == 5 || button == 7){
 		mytime = mytime & 0xFF0F;
 		mytime = (switches << 4) | mytime;
 	}
 	// button 3
-	if(button == 2 /*|| button == 3 || button == 6 || button == 7*/) {
+	if(button == 2 || button == 3 || button == 6 || button == 7){
 		mytime = mytime & 0xF0FF;
 		mytime = (switches << 8) | mytime;
 	}
 	// button 4
-	if(button == 4 /*|| button == 5 || button == 6 || button == 7*/) {
+	if(button == 4 || button == 5 || button == 6 || button == 7){
 		mytime = mytime & 0x0FFF;
 		mytime = (switches << 12) | mytime;
 	}

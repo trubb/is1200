@@ -17,7 +17,7 @@
 volatile int *E;
 volatile int *porte;
 
-int mytime = 0x5957;
+int mytime = 0x0000; // changed from 5957 in order to make it easier to see real number of ticks
 
 char textstring[] = "text, more text, and even more text!";
 
@@ -59,17 +59,17 @@ void labwork( void ) {
 	// om button == 1 -> knapp 2(001) tryckt, om button == 2 -> knapp 3(010), osv
 
 	// button 2
-	if(button == 1 /*|| button == 3 || button == 5 || button == 7*/){
+	if(button == 1 || button == 3 || button == 5 || button == 7){
 		mytime = mytime & 0xFF0F;
 		mytime = (switches << 4) | mytime;
 	}
 	// button 3
-	if(button == 2 /*|| button == 3 || button == 6 || button == 7*/){
+	if(button == 2 || button == 3 || button == 6 || button == 7){
 		mytime = mytime & 0xF0FF;
 		mytime = (switches << 8) | mytime;
 	}
 	// button 4
-	if(button == 4 /*|| button == 5 || button == 6 || button == 7*/){
+	if(button == 4 || button == 5 || button == 6 || button == 7){
 		mytime = mytime & 0x0FFF;
 		mytime = (switches << 12) | mytime;
 	}

@@ -6,7 +6,7 @@
 	This file should be changed by YOU! So you must
 	add comment(s) here with your name(s) and date(s):
 
-	This file modified 2017-04-31 by Ture Teknolog 
+	This file modified 2017-04-31 by Ture Teknolog
 
 	For copyright and licensing, see file COPYING */
 
@@ -26,14 +26,15 @@ void user_isr( void ) {
 /* Lab-specific initialization goes here */
 void labinit( void ) {
 	
-	// Set *E to address of TRISE.
+	// Set *E to address of TRISE, volatile pointer
 	volatile int *E = (volatile int *) 0xbf886100;
 	
-	// Set last 8 bits to zero, i.e. sets them as output pins.
+	// Set the 8 least significant bits to zero to set them to be output pins
 	*E = *E & 0xff00;
 
 	// Initialize port D, set bits 11-5 as inputs.
-	// If this is the  wrong order, try with instead 0x07f0.
+	// om 0-indexerat (vilket det borde vara) så 0xfe0 rätt
+	// funkar inte det så pröva med 0x07f0.
 	TRISD = TRISD & 0x0fe0;
 
 	return;
@@ -43,33 +44,44 @@ void labinit( void ) {
 void labwork( void ) {
 
 	volatile int *porte = (volatile int *) 0xbf886110;
-
-	(*porte) += 0x1;	// testa med ++, torde vara samma resultat som a = a + 0x1
+ 	
+ 	*porte = 0x0; // set whatever porte points at to 0
 
 	int switches = getsw();
 	int button = getbtns();
 	
-	/* 
-	 * Check if bit 1(001) is pressed and 2(010) etc.
-	 * switches is a number 0-f shift it into the right position
-	 * and OR it with the correct zeroed byte of mytime.
-	*/	
+	// MÅSTE LISTA UT HUR ADRESSERINGEN FUNGERAR HÄR NEDAN
+	// 1, 2, 4 ??????
+	// verkar vara eftersom vi har 3 bitar att lira med (med värden 4 2 1)
+	// om button == 1 -> knapp 2(001) tryckt, om button == 2 -> knapp 3(010), osv
 
-	if (button & 1) {
-		mytime = (switches << 4) | (mytime & 0xff0f);
+    // button 2
+    if(button == 1 /*|| button == 3 || button == 5 || button == 7*/){
+      mytime = mytime & 0xFF0F;
+      mytime = (switches << 4) | mytime;
+    }
+    // button 3
+    if(button == 2 /*|| button == 3 || button == 6 || button == 7*/){
+      mytime = mytime & 0xF0FF;
+      mytime = (switches << 8) | mytime;
+    }
+    // button 4
+    if(button == 4 /*|| button == 5 || button == 6 || button == 7*/){
+      mytime = mytime & 0x0FFF;
+      mytime = (switches << 12) | mytime;
 	}
-	if (button & 2) {
-		mytime = (switches << 8) | (mytime & 0xf0ff);
-	}
-	if (button & 4) {
-		mytime = (switches << 12) | (mytime & 0x0fff);
-}
-
 
 	delay( 1000 );
 	time2string( textstring, mytime );
 	display_string( 3, textstring );
 	display_update();
 	tick( &mytime );
+
+	// uppgift 1d
+	// avreferera porte-pointern och öka det som finns där med 0x1 (1)
+	(*porte) += 0x1;
+	// testa också med ++, borde vara samma resultat som a = a + 0x1
+	// görs efter call till tick because reasons
+
 	display_image(96, icon);
 }

@@ -2,12 +2,18 @@
 #include <pic32mx.h>
 #include "mipslab.h"
 
-int getsw(void) {
+/*
+ * returnerar data från SWx
+ */
+int getsw(void) { // called as "getsw();"
 
 	return (PORTD >> 8) & 0x000F;
 }
 
-int getbtns(void) {
+/*
+ * returnerar data från BTNx
+ */
+int getbtns(void) { // called as "getbtns();"
 
 	return (PORTD >> 5) & 0x0007;
 }

@@ -33,12 +33,12 @@ void labinit( void ) {
 	
 	// Set *E to address of TRISE, volatile pointer
 	myTRISE = (volatile int *) 0xbf886100;
-	*myPORTE = 0x0; // set whatever porte points at to 0
-	
-	myPORTE = (volatile int *) 0xbf886110;
 	// Set the 8 least significant bits to zero to set them to be output pins
 	*myTRISE = *myTRISE & 0xff00;
 
+	myPORTE = (volatile int *) 0xbf886110;
+	*myPORTE = 0x0; // set whatever porte points at to 0
+	
 	// Initialize port D, set bits 11-5 as inputs.
 	// om 0-indexerat (vilket det borde vara) så 0xfe0 rätt
 	// funkar inte det så pröva med 0x07f0.
@@ -47,7 +47,7 @@ void labinit( void ) {
 	// initialize timer2
 	T2CON = 0x0; // stop clock until init done by setting 1st bit to 0
 	T2CONSET = 0x70; //	set 0x70, 0111 000 for 1:256 prescaling (clock rate divider)
-	TMR2 = 0; // clear timer register
+	TMR2 = 0x0; // clear timer register
 	PR2 = (80000000 / 256) / 10; // set timeperiod for 100ms
 	T2CONSET = 0x8000; // start the timer by setting bit 15 in T2CON "on" (1)
 

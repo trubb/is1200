@@ -44,7 +44,7 @@ void user_isr( void ) {
 		// Clear the timer interrupt status flag
 		// http://ww1.microchip.com/downloads/en/DeviceDoc/61105F.pdf
 		// page 26
-		IFSCLR(0) = 0x100;
+		IFSCLR(0) = 0x0100;
 	}
 }
 
@@ -69,16 +69,25 @@ void labinit( void ) {
 	T2CONSET = 0x70; //	set 0x70, 0111 000 for 1:256 prescaling (clock rate divider)
 	TMR2 = 0x0; // clear timer register
 	PR2 = (80000000 / 256) / 10; // set timeperiod for 100ms
-	T2CONSET = 0x8000; // start the timer by setting bit 15 in T2CON "on" (1)
+	T2CONSET = 0x8000;	// start the timer by setting bit 15 in T2CON "on" (1)
+						// could also be done by shifting a bit 5 places left
 
+	// not setting any of these with pointers and stuff because that's scary!
 	IPCSET(2) = 0X1F;	// enable timer 2 and set interrupt priority to 7 - highest
+						// Subprio == 3, highest
+						// IPC == Interrupt Priority Control
+						// 0x1F == 000 111 11 bits 4:2 prio, 1:0 subprio
 
-	IECSET(0) = 256;	// interrupt enable reg, sets bit 8 to enable interrupts
+	IECSET(0) = 256;	// interrupt enable control, sets bit 8 to enable interrupts
 						// 256 because 100000000000 didnt play well with the compiler
+						// Interrupt Enable Control
 	
-	IECSET(0) = 0x800; // enable external interrupt #2
+	IECSET(0) = 0x800;	// enable external interrupt 2 for timer 2
+					 	// 0x800 == 1000 0000 0000
+						// based on: IEC0SET = 0x0000 8000;     // enable INT3
+						// from section 8.10: enable external interrupts
 
-	enable_interrupt();	// call enable interrupts
+	enable_interrupt();	// call function in labwork.S to enable interrupts globally
 
 	return;
 }

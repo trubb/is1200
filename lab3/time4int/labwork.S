@@ -101,12 +101,6 @@ delay:
 # jr $ra
 # nop
 
-
-enable_interrupt:
-  ei
-  jr $ra
-  nop
-
   # NBCD handler
   #
   # $a0 contains the address where we can store our output
@@ -200,3 +194,10 @@ time2string:
 
 #  jr    $ra         # jump out since we are done
 #  nop             # because we are scared of the branch delay slot
+
+
+enable_interrupt:
+  ei          # execute ei instruction
+  jr $ra      # return to caller
+  nop         # branch delay slots scare me
+

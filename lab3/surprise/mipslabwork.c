@@ -48,10 +48,10 @@ void user_isr( void ) {
 	}
 
 	// surprise assignment
-	if (IFS(1) & 0x080) {
+	if (IFS(0) & 0x080) {	// switch 1 == set bit 7
 
 		(*myPORTE)++;	// increase portE value by one
-		IFSCLR(1) = 0x0100;	// clear interrupt from switch 1
+		IFSCLR(0) = 0x080;	// clear interrupt from switch 1
 	}
 }
 

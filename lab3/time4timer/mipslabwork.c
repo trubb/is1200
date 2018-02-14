@@ -48,7 +48,11 @@ void labinit( void ) {
 	T2CON = 0x0; // stop clock until init done by setting 1st bit to 0
 	T2CONSET = 0x70; //	set 0x70, 0111 000 for 1:256 prescaling (clock rate divider)
 	TMR2 = 0x0; // clear timer register
-	PR2 = (80000000 / 256) / 10; // set timeperiod for 100ms
+	PR2 = (80000000 / 256) / 10; // == 31250, set timeperiod for 100ms
+								 // sets PR2 to define time between time-outs
+								 // PR is the period register. When a timer reaches
+								 // the specified period, it rolls back to 0 and sets
+								 // the TxIF bit in the IFS0 interrupt flag register.
 	T2CONSET = 0x8000; // start the timer by setting bit 15 in T2CON "on" (1)
 
 	return;
@@ -60,9 +64,6 @@ void labwork( void ) {
 	int switches = getsw();
 	int button = getbtns();
 	
-	// MÅSTE LISTA UT HUR ADRESSERINGEN FUNGERAR HÄR NEDAN
-	// 1, 2, 4 ??????
-	// verkar vara eftersom vi har 3 bitar att lira med (med värden 4 2 1)
 	// om button == 1 -> knapp 2(001) tryckt, om button == 2 -> knapp 3(010), osv
 
 	// button 2
@@ -82,22 +83,24 @@ void labwork( void ) {
 	}
 
 	// Check time-out event flag.
-	// if third bit is set then ohshit things are going down
+	// if third bit is set then we have an interrupt
 	if (IFS(0) & 0x100) {
 
 		/*
 		 * Question 2.1
-		 * Reset all event flags, do 0x0000000000100 instead?
-		 *
-		 * Clear the timer interrupt status flag
+		 * Reset the event flag for the interrupt we're watching
+		 * by using IFSCLR so that we're only resetting the specified bit
+		 * Clear the timer interrupt status flag:
 		 * http://ww1.microchip.com/downloads/en/DeviceDoc/61105F.pdf
 		 * page 26
 		*/
 		IFSCLR(0) = 0x0100;
 
-		timeoutcount++;	// increase counter
+		timeoutcount++;	// increase counter since we had an interrupt
 	}
 
+	// no need to wrap this in the above if since we need to reach the
+	// 10 interrupts
 	if (timeoutcount == 10) {	// when #interrupts reaches 10 do:
 		//delay( 1000 ); // shouldnt be here for this right?
 		time2string( textstring, mytime );

@@ -14,8 +14,8 @@
 #include <pic32mx.h>	/* Declarations of system-specific addresses etc */
 #include "mipslab.h"	/* Declatations for these labs */
 
-volatile int *E;
-volatile int *porte;
+volatile int *myTRISE;		// declare the pointers volatile and global in order to
+volatile int *myPORTE;		// fix previous adressing issues
 
 int mytime = 0x0000; // changed from 5957 in order to make it easier to see real number of ticks
 
@@ -28,20 +28,22 @@ void user_isr( void ) {
 
 /* Lab-specific initialization goes here */
 void labinit( void ) {
-	
-	// Set *E to address of TRISE, volatile pointer
-	E = (volatile int *) 0xbf886100;
-	
-	porte = (volatile int *) 0xbf886110;
 
-	*porte = 0x0; // set whatever porte points at to 0
+	// Set *E to address of TRISE, volatile int pointer
+	// The TRISx registers configure the data direction flow through port I/O pins.
+	myTRISE = (volatile int *) 0xbf886100;
+	
+	myPORTE = (volatile int *) 0xbf886110;
 
+	*myPORTE = 0x0; // set whatever myPORTE points at to 0, clear what's there
+
+	// The TRISx register bits determine whether a PORTx I/O pin is an input or an output
 	// Set the 8 least significant bits to zero to set them to be output pins
-	*E = *E & 0xff00;
+	// If a data direction bit is ‘1’, the corresponding I/O port pin is an input
+	*myTRISE = *myTRISE & 0xff00;
 
 	// Initialize port D, set bits 11-5 as inputs.
-	// om 0-indexerat (vilket det borde vara) så 0xfe0 rätt
-	// funkar inte det så pröva med 0x07f0.
+	// same principle as above, bits that are "1" are inputs
 	TRISD = TRISD | 0x0fe0; // changed to | from &
 
 	return;
@@ -53,23 +55,23 @@ void labwork( void ) {
 	int switches = getsw();
 	int button = getbtns();
 	
-	// MÅSTE LISTA UT HUR ADRESSERINGEN FUNGERAR HÄR NEDAN
-	// 1, 2, 4 ??????
-	// verkar vara eftersom vi har 3 bitar att lira med (med värden 4 2 1)
+	// eftersom vi har 3 bitar att lira med (med värden 4 2 1)
 	// om button == 1 -> knapp 2(001) tryckt, om button == 2 -> knapp 3(010), osv
+	// button == 3 -> 011, == 4 -> 100, == 5 -> 101, == 6 -> 110, == 7 -> 111
 
-	// button 2
-	if(button == 1 || button == 3 || button == 5 || button == 7){
-		mytime = mytime & 0xFF0F;
+	// button 2 001
+	if(button == 1 || button == 3 || button == 5 || button == 7) {
+		mytime = mytime & 0xFF0F; // & mytime and FF0F to mask out bit 1
 		mytime = (switches << 4) | mytime;
+		// update time to be what the switches are set to, shifted to correct pos
 	}
-	// button 3
-	if(button == 2 || button == 3 || button == 6 || button == 7){
+	// button 3 010
+	if(button == 2 || button == 3 || button == 6 || button == 7) {
 		mytime = mytime & 0xF0FF;
 		mytime = (switches << 8) | mytime;
 	}
-	// button 4
-	if(button == 4 || button == 5 || button == 6 || button == 7){
+	// button 4 110
+	if(button == 4 || button == 5 || button == 6 || button == 7) {
 		mytime = mytime & 0x0FFF;
 		mytime = (switches << 12) | mytime;
 	}
@@ -78,12 +80,12 @@ void labwork( void ) {
 	time2string( textstring, mytime );
 	display_string( 3, textstring );
 	display_update();
-	tick( &mytime );
-	display_image(96, icon);
+	tick( &mytime ); // calla tick med mytimes ADRESS
+	display_image(96, icon); // show doge?
 
 	// uppgift 1d
-	// avreferera porte-pointern och öka det som finns där med 1
-	*porte = *porte + 0x1;
+	// avreferera myPORTE-pointern och öka det som finns där med 1
+	*myPORTE = *myPORTE + 0x1;
 	// testa också med ++, borde vara samma resultat som a = a + 0x1
 	// görs efter call till tick because reasons
 }
